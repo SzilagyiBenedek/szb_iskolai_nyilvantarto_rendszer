@@ -2,35 +2,36 @@
 
 class StudentView
 {
-    public static function list($subjects)
+    public static function list($students)
     {
         echo <<<HTML
             <h1>Tantárgyak</h1>
 
-            <p><a href="index.php?view=add-subject">Új diák hozzáadása</a></p>
+            <p><a href="index.php?view=add-student">Új diák hozzáadása</a></p>
 
             <table border="1" cellpadding="5">
                 <tr>
                     <th>ID</th>
                     <th>Név</th>
+                    <th>Szül</th>
                     <th>Osztály</th>
-                    <th>Születési dátum</th>
                     <th>Műveletek</th>
                 </tr>
         HTML;
 
-        foreach ($subjects as $s) {
+        foreach ($students as $s) {
             $id = $s['id'];
             $name = htmlspecialchars($s['name'], ENT_QUOTES, 'UTF-8');
-
+            $birthdate = htmlspecialchars($s['birthdate'], ENT_QUOTES, 'UTF-8');
+            $class_name = htmlspecialchars($s['class_name'], ENT_QUOTES, 'UTF-8');
             echo <<<HTML
                 <tr>
                     <td>{$id}</td>
                     <td>{$name}</td>
-                    <td>{$class_id}</td>
-                    <td>{$birth_date}</td>
+                    <td>{$birthdate}</td>
+                    <td>{$class_name}</td>
                     <td>
-                        <a href="index.php?view=edit-student&id={$id}">Módosítás</a> |
+                        <a href="index.php?view=edit-students&id={$id}">Módosítás</a> |
                         <a href="index.php?view=students&delete={$id}"
                            onclick="return confirm('Biztos törlöd?')">Törlés</a>
                     </td>
@@ -41,44 +42,71 @@ class StudentView
         echo "</table>";
     }
 
-    public static function addForm()
-    {
-        echo <<<HTML
-            <h1>Új diák hozzáadása</h1>
+    public static function addForm(array $classes)
+{
+    echo <<<HTML
+        <h1>Új tanuló hozzáadása</h1>
+        <form method="post" action="index.php?view=students">
+            <label>Tanuló neve:</label><br>
+            <input type="text" name="name" required><br><br>
 
-            <form method="post" action="index.php?view=students">
-                <label>Diák neve:</label><br>
-                <input type="text" name="name"><br><br>
-                <label>Diák osztály:</label><br>
-                <input type="text" name="class_id"><br><br>
-                <label>Diák születési dátuma:</label><br>
-                <input type="text" name="birth_date"><br><br>
+            <label>Születési dátum:</label><br>
+            <input type="date" name="birthdate" required><br><br>
 
-                <button type="submit" name="add-student">Hozzáadás</button>
-                <a href="index.php?view=students">Mégse</a>
-            </form>
-        HTML;
+            <label>Osztály:</label><br>
+            <select name="class_id" required>
+                <option value="">-- Válassz osztályt --</option>
+HTML;
+
+    foreach ($classes as $class) {
+        $id = htmlspecialchars($class['id']);
+        $text = htmlspecialchars($class['year'] . ' ' . $class['grade'] . $class['letter']); // pl. 2012 12C
+        echo "<option value=\"{$id}\">{$text}</option>";
     }
 
-    public static function editForm($subject)
-    {
-        $id = $subject['id'];
-        $name = htmlspecialchars($subject['name'], ENT_QUOTES, 'UTF-8');
-        $name = htmlspecialchars($subject['class_id'], ENT_QUOTES, 'UTF-8');
-        $name = htmlspecialchars($subject['birth_date'], ENT_QUOTES, 'UTF-8');
+    echo <<<HTML
+            </select><br><br>
+            <button type="submit" name="add-student">Hozzáadás</button>
+            <a href="index.php?view=students">Mégse</a>
+        </form>
+HTML;
+}
 
-        echo <<<HTML
-            <h1>Tantárgy módosítása</h1>
+public static function editForm(array $student, array $classes)
+{
+    $id = $student['id'];
+    $name = htmlspecialchars($student['name']);
+    $birthdate = $student['birthdate'];
+    $class_id = $student['class_id'];
 
-            <form method="post" action="index.php?view=students">
-                <input type="hidden" name="id" value="{$id}">
+    echo <<<HTML
+        <h1>Tanuló módosítása</h1>
+        <form method="post" action="index.php?view=students">
+            <input type="hidden" name="id" value="{$id}">
 
-                <label>Új név:</label><br>
-                <input type="text" name="name" value="{$name}"><br><br>
+            <label>Tanuló neve:</label><br>
+            <input type="text" name="name" value="{$name}" required><br><br>
 
-                <button type="submit" name="update-student">Mentés</button>
-                <a href="index.php?view=students">Mégse</a>
-            </form>
-        HTML;
+            <label>Születési dátum:</label><br>
+            <input type="date" name="birthdate" value="{$birthdate}" required><br><br>
+
+            <label>Osztály:</label><br>
+            <select name="class_id" required>
+                <option value="">-- Válassz osztályt --</option>
+HTML;
+
+    foreach ($classes as $class) {
+        $cid = htmlspecialchars($class['id']);
+        $text = htmlspecialchars($class['year'] . ' ' . $class['grade'] . $class['letter']); // pl. 2012 12C
+        $selected = ($cid == $class_id) ? 'selected' : '';
+        echo "<option value=\"{$cid}\" {$selected}>{$text}</option>";
     }
+
+    echo <<<HTML
+            </select><br><br>
+            <button type="submit" name="update-student">Mentés</button>
+            <a href="index.php?view=students">Mégse</a>
+        </form>
+HTML;
+}
 }

@@ -9,53 +9,63 @@ class StudentModel
         $this->pdo = $pdo;
     }
 
+    // Lekérdezi az összes tanulót az osztály nevével
     public function getAll()
     {
-        return $this->pdo
-            ->query("SELECT * FROM students ORDER BY year DESC, grade ASC, letter ASC")
-            ->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->query("
+            SELECT students.id,
+                students.name,
+                students.birthdate,
+                CONCAT(classes.grade, classes.letter) AS class_name
+            FROM students
+            LEFT JOIN classes ON students.class_id = classes.id
+            ORDER BY students.id DESC
+        ");
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getYears()
+    public function getClasses()
     {
-
+        $stmt = $this->pdo->query("SELECT id, grade, letter FROM classes ORDER BY grade, letter");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-    public function getClassByYear()
-    {
-
-    }
-
+    
+    // Egy tanuló lekérdezése ID alapján
     public function find($id)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM students WHERE id = :id");
+        $stmt = $this->pdo->prepare("SELECT id, name, birthdate, class_id, classes.name AS class_name FROM students
+            LEFT JOIN classes ON students.class_id = classes.id
+            WHERE students.id = :id
+        ");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create($year, $grade, $letter)
+    // Új tanuló létrehozása
+    public function create($name, $birthdate, $class_id)
     {
-        $stmt = $this->pdo->prepare(
-            "INSERT INTO students (year, grade, letter) VALUES (:year, :grade, :letter)"
-        );
+        $stmt = $this->pdo->prepare("INSERT INTO students (name, birthdate, class_id) VALUES (:name, :birthdate, :class_id)");
         $stmt->execute([
-            'year' => $year,
-            'grade' => $grade,
-            'letter' => $letter
+            'name'       => $name,
+            'birthdate' => $birthdate,
+            'class_id'   => $class_id
         ]);
     }
 
-    public function update($id, $year, $grade, $letter)
+    // Tanuló adatainak frissítése
+    public function update($id, $name, $birthdate, $class_id)
     {
-        $stmt = $this->pdo->prepare("UPDATE students SET year = :year, grade = :grade, letter = :letter WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE students SET name = :name, birthdate = :birthdate, class_id = :class_id WHERE id = :id");
         $stmt->execute([
-            'id' => $id,
-            'year' => $year,
-            'grade' => $grade,
-            'letter' => $letter
+            'name'       => $name,
+            'birthdate' => $birthdate,
+            'class_id'   => $class_id,
+            'id'         => $id
         ]);
     }
 
+    // Tanuló törlése
     public function delete($id)
     {
         $stmt = $this->pdo->prepare("DELETE FROM students WHERE id = :id");
