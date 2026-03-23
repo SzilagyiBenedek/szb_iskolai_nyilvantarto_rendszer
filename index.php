@@ -4,6 +4,7 @@ require_once "views/HomeView.php";
 require_once "views/SubjectView.php";
 require_once "views/StudentView.php";
 require_once "views/ClassView.php";
+require_once "views/MarkView.php";
 require_once "models/SubjectModel.php";
 require_once "controllers/SubjectController.php";
 require_once "controllers/Router.php";

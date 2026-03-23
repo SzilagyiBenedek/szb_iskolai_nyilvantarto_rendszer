@@ -31,7 +31,7 @@ class StudentView
                     <td>{$birthdate}</td>
                     <td>{$class_name}</td>
                     <td>
-                        <a href="index.php?view=edit-students&id={$id}">Módosítás</a> |
+                        <a href="index.php?view=edit-student&id={$id}">Módosítás</a> |
                         <a href="index.php?view=students&delete={$id}"
                            onclick="return confirm('Biztos törlöd?')">Törlés</a>
                     </td>

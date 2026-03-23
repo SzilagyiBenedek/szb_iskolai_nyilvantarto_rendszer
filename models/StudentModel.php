@@ -12,13 +12,7 @@ class StudentModel
     // Lekérdezi az összes tanulót az osztály nevével
     public function getAll()
     {
-        $stmt = $this->pdo->query("
-            SELECT students.id,
-                students.name,
-                students.birthdate,
-                CONCAT(classes.grade, classes.letter) AS class_name
-            FROM students
-            LEFT JOIN classes ON students.class_id = classes.id
+        $stmt = $this->pdo->query("SELECT students.id, students.name, students.birthdate, CONCAT(classes.grade, classes.letter) AS class_name FROM students LEFT JOIN classes ON students.class_id = classes.id
             ORDER BY students.id DESC
         ");
 
@@ -34,7 +28,7 @@ class StudentModel
     // Egy tanuló lekérdezése ID alapján
     public function find($id)
     {
-        $stmt = $this->pdo->prepare("SELECT id, name, birthdate, class_id, classes.name AS class_name FROM students
+        $stmt = $this->pdo->prepare("SELECT students.id, name, birthdate, class_id, CONCAT(classes.grade, classes.letter) AS class_name FROM students
             LEFT JOIN classes ON students.class_id = classes.id
             WHERE students.id = :id
         ");
