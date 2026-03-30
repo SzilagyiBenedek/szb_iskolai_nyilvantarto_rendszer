@@ -23,7 +23,9 @@ class LayoutView
             <a href="index.php?view=subjects">Tantárgyak</a> |
             <a href="index.php?view=classes">Osztályok</a>  |
             <a href="index.php?view=students">Diákok</a> |
-            <a href="index.php?view=marks">Jegyek</a>
+            <a href="index.php?view=marks">Jegyek</a>   ||
+            <a href="index.php?view=maintenance">karbantartás</a>   |
+            <a href="index.php?view=lists">lista</a>
         </nav>
         <hr>
         HTML;

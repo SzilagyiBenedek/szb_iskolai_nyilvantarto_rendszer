@@ -4,7 +4,7 @@ require_once "controllers/ClassController.php";
 require_once "controllers/StudentController.php";
 require_once "controllers/MarkController.php";
 require_once "views/HomeView.php";
-
+require_once "views/MaintenanceView.php";
 
 class Router
 {
@@ -42,6 +42,21 @@ class Router
             case 'edit-mark':                        
                 $controller = new MarkController($this->pdo);
                 $controller->handleRequest($view);
+                break;
+
+            case "maintenance":
+                MaintenanceView::menu();
+                break;                
+            case "generate-data":
+                require_once "Install.php";
+                $install = new Install($this->pdo);
+                $install->generate();
+                MaintenanceView::generated();
+                break;
+            case 'lists':
+                require_once "controllers/ListController.php";
+                $controller = new ListController($this->pdo);
+                $controller->handleRequest();
                 break;
 
             default:
