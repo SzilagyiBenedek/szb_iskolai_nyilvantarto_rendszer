@@ -16,20 +16,41 @@ class LayoutView
     }
 
     public static function menu()
-    {
-        echo <<<HTML
-        <nav>
-            <a href="index.php?view=home">Kezdőlap</a> |
-            <a href="index.php?view=subjects">Tantárgyak</a> |
-            <a href="index.php?view=classes">Osztályok</a>  |
-            <a href="index.php?view=students">Diákok</a> |
-            <a href="index.php?view=marks">Jegyek</a>   ||
-            <a href="index.php?view=maintenance">karbantartás</a>   |
-            <a href="index.php?view=lists">lista</a>
-        </nav>
-        <hr>
-        HTML;
+{
+    echo <<<HTML
+    <nav>
+        <a href="index.php?view=home">Kezdőlap</a> |
+        <a href="index.php?view=subjects">Tantárgyak</a> |
+        <a href="index.php?view=classes">Osztályok</a> |
+        <a href="index.php?view=students">Diákok</a> |
+        <a href="index.php?view=marks">Jegyek</a> ||
+        <a href="index.php?view=maintenance">Karbantartás</a> |
+        <a href="index.php?view=lists">Lista</a>
+    HTML;
+
+    if (isset($_SESSION['user'])) {
+
+        $name = htmlspecialchars(
+            $_SESSION['user']['username'],
+            ENT_QUOTES,
+            'UTF-8'
+        );
+
+        echo " | <a href='index.php?view=profile'>{$name}</a>";
+
+    } else {
+
+        echo "
+            | <a href='index.php?view=register'>Regisztráció</a>
+            | <a href='index.php?view=login'>Bejelentkezés</a>
+        ";
     }
+
+    echo <<<HTML
+    </nav>
+    <hr>
+    HTML;
+}
 
     public static function footer()
     {

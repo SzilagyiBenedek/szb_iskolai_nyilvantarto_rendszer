@@ -5,6 +5,7 @@ require_once "controllers/StudentController.php";
 require_once "controllers/MarkController.php";
 require_once "views/HomeView.php";
 require_once "views/MaintenanceView.php";
+require_once "controllers/UserController.php";
 
 class Router
 {
@@ -57,6 +58,13 @@ class Router
                 require_once "controllers/ListController.php";
                 $controller = new ListController($this->pdo);
                 $controller->handleRequest();
+                break;
+            case 'register':
+            case 'login':
+            case 'logout':
+            case 'profile':                
+                $controller = new UserController($this->pdo);
+                $controller->handleRequest($view);
                 break;
 
             default:

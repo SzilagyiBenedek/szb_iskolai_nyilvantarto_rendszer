@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "views/LayoutView.php";
 require_once "views/HomeView.php";
 require_once "views/SubjectView.php";
